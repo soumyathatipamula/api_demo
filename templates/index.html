@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsAPI Search</title>
+    
+    <link rel="stylesheet" href="../static/css/style.css">
+
+</head>
+<body>
+    <h1>Search News Articles</h1>
+    <form id="search-form">
+        <input type="text" name="query" id="query" placeholder="Enter search term" required>
+        <button type="submit">Search</button>
+    </form>
+    <div id="news-results"></div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = document.getElementById('query').value;
+            
+            fetch('/search_news', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `query=${query}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const newsResultsDiv = document.getElementById('news-results');
+                newsResultsDiv.innerHTML = '';
+                if (data.error) {
+                    newsResultsDiv.innerHTML = `<p>${data.error}</p>`;
+                } else {
+                    data.articles.forEach(article => {
+                        newsResultsDiv.innerHTML += `
+                            <div>
+                                <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                                <p>${article.description}</p>
+                                <p><strong>Source:</strong> ${article.source.name}</p>
+                                <p><strong>Published at:</strong> ${new Date(article.publishedAt).toLocaleString()}</p>
+                            </div>
+                            <hr>
+                        `;
+                    });
+                }
+            })
+            .catch(error => console.error('Error fetching news:', error));
+        });
+    </script>
+</body>
+</html>
