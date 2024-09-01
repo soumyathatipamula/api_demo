@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-# Replace this with your NewsAPI API Key
+
 NEWSAPI_KEY = "c730d0b384a8497d8a4084bc21532521"
 
 @app.route('/')
@@ -17,9 +17,9 @@ def search_news():
     params = {
         "q": query,
         "apiKey": NEWSAPI_KEY,
-        "pageSize": 10,  # Number of results to return per page
-        "language": "en",  # Language of the news
-        "sortBy": "relevancy"  # Sort articles by relevancy
+        "pageSize": 10,  
+        "language": "en",
+        "sortBy": "relevancy"
     }
 
     response = requests.get(url, params=params)
